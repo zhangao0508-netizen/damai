@@ -1,3 +1,5 @@
+$OutputEncoding = New-Object System.Text.UTF8Encoding $false
+[Console]::OutputEncoding = $OutputEncoding
 $ErrorActionPreference='Stop'
 $RepoRoot=Split-Path $PSScriptRoot -Parent
 $LocalRoot=if($env:DAMAI_LAB_HOME){$env:DAMAI_LAB_HOME}else{Join-Path $RepoRoot '.local'}

@@ -10,11 +10,22 @@ foreach($service in @(@('base-data','6083'),@('user','6082'),@('program','6086')
 Write-Host 'All eight application readiness checks passed.'
 function Invoke-BusinessQuery {
   param([string]$Path,[string]$Body)
-  $text=& kubectl --context kind-demo-lab -n damai-dev exec $pod -- wget -qO- --header 'Content-Type: application/json' --header 'no_verify: true' --post-data $Body "http://127.0.0.1/api/$Path"
-  if($LASTEXITCODE -ne 0){throw "Business query HTTP failed: $Path"}
-  $result=($text -join "`n")|ConvertFrom-Json
-  if($result.code -ne 0){throw "Business query failed: $Path code=$($result.code)"}
-  return $result.data
+  $payload='/tmp/damai-smoke-'+[guid]::NewGuid().ToString('N')+'.json'
+  $Body | & kubectl --context kind-demo-lab -n damai-dev exec -i $pod -- tee $payload | Out-Null
+  if($LASTEXITCODE -ne 0){throw 'Cannot write probe payload'}
+  try {
+    foreach($attempt in 1..10){
+      $text=& kubectl --context kind-demo-lab -n damai-dev exec $pod -- wget -qO- --header 'Content-Type: application/json' --header 'no_verify: true' --post-file $payload "http://127.0.0.1/api/$Path"
+      if($LASTEXITCODE -eq 0){
+        $result=($text -join "`n")|ConvertFrom-Json
+        if($result.code -eq 0){return $result.data}
+      }
+      if($attempt -eq 10){throw "Business query failed: $Path code=$($result.code) message=$($result.message)"}
+      Start-Sleep -Seconds 2
+    }
+  } finally {
+    & kubectl --context kind-demo-lab -n damai-dev exec $pod -- rm -- $payload | Out-Null
+  }
 }
 $cities=@(Invoke-BusinessQuery 'damai/basedata/area/selectCityData' '{}')
 if($cities.Count -lt 1){throw 'City data is empty'}

@@ -16,7 +16,7 @@ try {
   }
   Invoke-Checked (Get-LabPython) @('ops/render.py',$Tag)
   # Only this project's explicitly named Docker stack; never existing MySQL containers.
-  Invoke-Checked docker @('compose','--env-file',"$LocalRoot/compose.env",'-f','ops/.generated/compose.json','up','-d')
+  Invoke-Checked docker @('compose','--env-file',"$LocalRoot/compose.env",'-f','ops/.generated/compose.json','up','-d','--wait','--wait-timeout','300')
   $attached=& docker inspect demo-lab-control-plane --format '{{json .NetworkSettings.Networks}}'
   if($LASTEXITCODE -ne 0){throw 'Local kind node missing'}
   if(!$attached.Contains('damai-lab')){Invoke-Checked docker @('network','connect','damai-lab','demo-lab-control-plane')}
