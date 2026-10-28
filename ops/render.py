@@ -33,7 +33,7 @@ infra=[dict(apiVersion='v1',kind='Namespace',metadata=dict(name=ns)),obj('Secret
 initdir=local/'mysql-init'; initdir.mkdir(exist_ok=True)
 for f in sorted((root/'sql/cloud').glob('damai_*.sql')):
     db=f.stem
-    sql=f'CREATE DATABASE IF NOT EXISTS `{db}` CHARACTER SET utf8mb4;\nUSE `{db}`;\n'+f.read_text(encoding='utf-8-sig').replace('`important_notice` varchar(100)', '`important_notice` text')+f"\nGRANT ALL ON `{db}`.* TO 'damai'@'%';\n"
+    sql=f'SET NAMES utf8mb4;\nCREATE DATABASE IF NOT EXISTS `{db}` CHARACTER SET utf8mb4;\nUSE `{db}`;\n'+f.read_text(encoding='utf-8-sig').replace('`important_notice` varchar(100)', '`important_notice` text')+f"\nGRANT ALL ON `{db}`.* TO 'damai'@'%';\n"
     (initdir/f.name).write_text(sql,encoding='utf-8')
 (local/'compose.env').write_text('DAMAI_DB_PASSWORD='+pw+'\n',encoding='utf-8')
 services={}

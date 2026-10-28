@@ -58,3 +58,5 @@ powershell -NoProfile -ExecutionPolicy Bypass -File ops/smoke.ps1
 
 首页把全部城市的areaId从0修正为null，与后端SQL约定一致。
 
+
+SQL 初始化显式 SET NAMES utf8mb4，避免 MySQL 客户端默认 latin1 导致中文二次编码。发布检查会验证中文分类名称。Windows Runner 使用任务级 core.longpaths 配置支持原项目较长的模块路径，不修改全局 Git 设置。

@@ -20,6 +20,8 @@ $cities=@(Invoke-BusinessQuery 'damai/basedata/area/selectCityData' '{}')
 if($cities.Count -lt 1){throw 'City data is empty'}
 $categories=@(Invoke-BusinessQuery 'damai/program/program/category/selectByType' '{"type":1}')
 if($categories.Count -lt 4){throw 'Program categories missing'}
+$expected=([string][char]0x6f14)+[char]0x5531+[char]0x4f1a
+if(@($categories|Where-Object name -EQ $expected).Count -ne 1){throw 'Chinese text encoding check failed'}
 $ids=@($categories|Select-Object -First 4|ForEach-Object{$_.id})
 $body=@{areaId=$null;parentProgramCategoryIds=$ids}|ConvertTo-Json -Compress
 $programs=@(Invoke-BusinessQuery 'damai/program/program/home/list' $body)
