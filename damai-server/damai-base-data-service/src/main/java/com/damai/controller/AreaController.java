@@ -9,10 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -57,5 +54,11 @@ public class AreaController {
     @PostMapping(value = "/hot")
     public ApiResponse<List<AreaVo>> hot() {
         return ApiResponse.ok(areaService.hot());
+    }
+
+    @Operation(summary  = "test")
+    @GetMapping(value = "/test")
+    public ApiResponse<String> test() {
+        return ApiResponse.ok("这个测试下");
     }
 }
