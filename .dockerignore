@@ -1,0 +1,6 @@
+.git
+.idea
+.local
+ops/.generated
+**/node_modules
+**/dist

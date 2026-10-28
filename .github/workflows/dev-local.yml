@@ -1,0 +1,24 @@
+name: Damai - deploy dev to local Kubernetes
+on:
+  push:
+    branches: [dev]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: damai-local-dev
+  cancel-in-progress: false
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/dev'
+    runs-on: [self-hosted, Windows, X64, damai-local]
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: powershell
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Build Java and Docker images, deploy and verify
+        run: ./ops/deploy.ps1 -Tag $env:GITHUB_SHA

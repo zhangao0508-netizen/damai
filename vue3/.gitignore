@@ -25,3 +25,5 @@ yarn-lock.json
 *.njsproj
 *.sln
 *.sw?
+
+!package-lock.json

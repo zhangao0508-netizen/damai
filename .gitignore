@@ -48,3 +48,6 @@ CLAUDE.md
 AGENTS.md
 
 document
+
+.local/
+ops/.generated/

@@ -36,6 +36,7 @@ public class SecurityConfig {
                     .requestMatchers(adminContextPath + "/assets/**").permitAll()
                     .requestMatchers(adminContextPath + "/login", "/css/**", "/js/**", "/image/*").permitAll()
                     .requestMatchers(adminContextPath + "/v3/api-docs/**").permitAll()
+                    .requestMatchers(adminContextPath + "/actuator/health", adminContextPath + "/actuator/health/**").permitAll()
                     .anyRequest().authenticated())
             .formLogin(form -> form
                     .loginPage(adminContextPath + "/login")

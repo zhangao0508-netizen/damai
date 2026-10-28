@@ -67,7 +67,7 @@ const picArr = [swiperPic1]
 const categoryArr = ref([])
 const programList = ref([])
 const queryParams = ref({
-  "areaId": 0,
+  "areaId": null,
   "parentProgramCategoryIds": []
 })
 const programListVoList = ref([])
@@ -98,7 +98,7 @@ function getgetcategoryList() {
 }
 
 function handleUpdate(value) {
-  queryParams.value.areaId = value
+  queryParams.value.areaId = value === 0 || value === "0" ? null : value
 }
 
 function getMainCategoryList() {
